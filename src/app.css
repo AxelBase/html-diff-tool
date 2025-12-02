@@ -1,0 +1,191 @@
+/* src/app.css */
+
+/* --- Variables (Light Mode Default) --- */
+:root {
+  /* Core Colors */
+  --zinc-yellow: #F8F32B;
+  --zinc-yellow-hover: #e3de26;
+  --text-on-yellow: #1a1a1a;
+
+  /* Theme Colors */
+  --primary-bg: #fffbe6; /* Very light yellow tint */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  
+  --color-text-main: #2c3e50;
+  --color-text-muted: #546e7a;
+  
+  /* Input & Elements */
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0,0,0, 0.1);
+  
+  /* Blobs */
+  --blob-color-1: #F8F32B; /* Zinc */
+  --blob-color-2: #ffeb3b; /* Lighter Yellow */
+  
+  --radius-lg: 24px;
+  --radius-xl: 35px;
+  
+  /* Bootstrap Overrides */
+  --bs-body-bg: var(--primary-bg);
+  --bs-body-color: var(--color-text-main);
+}
+
+/* --- Dark Mode Overrides --- */
+[data-bs-theme="dark"] {
+  --primary-bg: #0f1214; /* Deep Dark */
+  --glass-bg: rgba(20, 20, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  
+  --color-text-main: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  
+  --input-bg: rgba(0, 0, 0, 0.4);
+  --input-border: rgba(255, 255, 255, 0.1);
+  
+  /* Blobs dimmed for dark mode */
+  --blob-color-1: #4a4a06; 
+  --blob-color-2: #3d3d05; 
+}
+
+/* --- Global & Reset --- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px; /* Offset for sticky header */
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--primary-bg);
+  color: var(--color-text-main);
+  transition: background-color 0.5s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* --- Animated Background Blobs --- */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(90px);
+  opacity: 0.4; /* Subtle opacity */
+  animation: floatBlob 20s infinite alternate ease-in-out;
+  transition: background-color 0.5s ease;
+}
+
+body::before {
+  background: var(--blob-color-1);
+  top: -10%;
+  left: -10%;
+}
+
+body::after {
+  background: var(--blob-color-2);
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 40px) scale(1.1); }
+}
+
+/* --- Glassmorphism Utilities --- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Inputs & Textareas --- */
+textarea, .form-control {
+  background-color: var(--input-bg) !important;
+  border: 2px solid var(--input-border) !important;
+  color: var(--color-text-main) !important;
+  border-radius: var(--radius-lg) !important;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+textarea:focus, .form-control:focus {
+  background-color: var(--input-bg) !important;
+  border-color: var(--zinc-yellow) !important;
+  box-shadow: 0 0 0 4px rgba(248, 243, 43, 0.25) !important;
+}
+
+/* --- Buttons --- */
+.btn {
+  border-radius: 50px !important;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; /* Bouncy */
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: var(--zinc-yellow) !important;
+  color: var(--text-on-yellow) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--zinc-yellow-hover) !important;
+  box-shadow: 0 5px 15px rgba(248, 243, 43, 0.4);
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--zinc-yellow) !important;
+  color: var(--color-text-main) !important;
+  background: transparent;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary.active {
+  background-color: var(--zinc-yellow) !important;
+  color: var(--text-on-yellow) !important;
+  border-color: var(--zinc-yellow) !important;
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--glass-border) !important;
+  color: var(--color-text-muted) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--glass-border) !important;
+  color: var(--color-text-main) !important;
+}
+
+/* --- Diff2Html Overrides for Theme --- */
+.d2h-wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
