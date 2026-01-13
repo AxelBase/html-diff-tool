@@ -4,9 +4,10 @@
   import { slide, fade } from 'svelte/transition';
   import { onMount } from 'svelte';
 
-  // --- Buy Me A Coffee Logic ---
-  const paypalUsername = 'AxelLab427'; // Update this!
-  const donationAmounts = [1, 3, 5, 10];
+  // --- Buy Me A Coffee + Bitcoin Logic ---
+  const bmacUsername = 'axelbase';           // ← your BuyMeACoffee username
+  const bitcoinAddress = 'bc1q3p0e6vt492m4w4fpz5m2cl4zcfuqqkgaj6myc9';
+
   let isDropdownOpen = false;
 
   function toggleDropdown() {
@@ -33,9 +34,8 @@
 
   // --- Dark Mode Logic ---
   let isDarkMode = false;
-  
+
   onMount(() => {
-    // Check local storage or system preference could go here
     const currentTheme = document.body.getAttribute('data-bs-theme');
     isDarkMode = currentTheme === 'dark';
   });
@@ -52,7 +52,7 @@
 <header class="fixed-top p-3 w-100" style="pointer-events: none; z-index: 1040;">
   <nav class="container glass rounded-pill px-4 py-2 d-flex justify-content-between align-items-center shadow-sm"
        style="pointer-events: auto; max-width: 1200px;">
-    
+
     <div class="d-flex align-items-center gap-3">
       <a href="{base}/" class="d-flex align-items-center gap-2 text-decoration-none logo-group">
         <img src="{base}/AxelLab-Logo.ico" alt="Logo" class="navbar-brand-logo" />
@@ -61,7 +61,7 @@
     </div>
 
     <div class="d-flex align-items-center gap-3">
-      
+
       <div class="d-none d-lg-flex align-items-center gap-2">
         <a class="nav-link-custom" href="{base}/">Home</a>
         <a class="nav-link-custom" href="{base}/#about">About</a>
@@ -72,21 +72,68 @@
 
       <div class="vr mx-2 d-none d-lg-block"></div>
 
+      <!-- Buy me a coffee + Bitcoin Dropdown -->
       <div class="position-relative" use:clickOutside on:click_outside={closeDropdown}>
-        <button class="bmac-button" on:click={toggleDropdown}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.35,22.2L12,22A10,10,0,0,1,2,12V10A2,2,0,0,1,4,8H7.2A5.13,5.13,0,0,1,12,3A5.13,5.13,0,0,1,16.8,8H20A2,2,0,0,1,22,10V12A10,10,0,0,1,12.35,22.2M4,10V12A8,8,0,0,0,12,20A8,8,0,0,0,20,12V10H16.8A5.11,5.11,0,0,1,12.5,5.12A5.15,5.15,0,0,1,7.2,10H4Z" />
+        <button
+          class="bmac-button d-flex align-items-center gap-2"
+          on:click={toggleDropdown}
+          aria-label="Support options"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2,21V19H20V21H2M20,8V5H4V8H20M20,10H4V13C4,14.38 4.5,15.63 5.31,16.58L11.64,19H12.36L18.69,16.58C19.5,15.63 20,14.38 20,13V10M16,2H8V4H16V2Z" />
           </svg>
-          <span class="d-none d-sm-inline">Buy me a coffee</span>
+          <span class="d-none d-sm-inline fw-semibold">Buy me a Coffee</span>
         </button>
 
         {#if isDropdownOpen}
-          <div class="bmac-dropdown" transition:slide={{ duration: 250 }}>
-            {#each donationAmounts as amount}
-              <a href="https://paypal.me/{paypalUsername}/{amount}" target="_blank" rel="noopener noreferrer" on:click={closeDropdown}>
-                ${amount}
-              </a>
-            {/each}
+          <div
+            class="bmac-dropdown glass"
+            transition:slide={{ duration: 250 }}
+          >
+            <a
+              href="https://buymeacoffee.com/{bmacUsername}"
+              target="_blank"
+              rel="noopener noreferrer"
+              on:click={closeDropdown}
+            >
+              <span class="amount">$3</span> One Coffee
+            </a>
+
+            <a
+              href="https://buymeacoffee.com/{bmacUsername}"
+              target="_blank"
+              rel="noopener noreferrer"
+              on:click={closeDropdown}
+            >
+              <span class="amount">$5</span> Two Coffees
+            </a>
+
+            <a
+              href="https://buymeacoffee.com/{bmacUsername}"
+              target="_blank"
+              rel="noopener noreferrer"
+              on:click={closeDropdown}
+            >
+              <span class="amount">$10</span> Three Coffees
+            </a>
+
+            <a
+              href="https://buymeacoffee.com/{bmacUsername}"
+              target="_blank"
+              rel="noopener noreferrer"
+              on:click={closeDropdown}
+              class="custom-amount"
+            >
+              Custom Amount
+            </a>
+
+            <a
+              href="bitcoin:{bitcoinAddress}?label=AxelBase&message=Buy%20me%20a%20coffee"
+              on:click={closeDropdown}
+              class="custom-amount bitcoin-option"
+            >
+              Buy via Crypto (Bitcoin)
+            </a>
           </div>
         {/if}
       </div>
@@ -120,11 +167,93 @@
 </footer>
 
 <style>
-  /* Navbar Styling */
+  /* ── Buy me a coffee button ── */
+  .bmac-button {
+    background: var(--zinc-yellow);
+    color: var(--text-on-yellow);
+    border: none;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(248, 243, 43, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .bmac-button:hover {
+    background: var(--zinc-yellow-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(248, 243, 43, 0.5);
+  }
+
+  .bmac-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── Dropdown ── */
+  .bmac-dropdown {
+    position: absolute;
+    top: 115%;
+    right: 0;
+    width: 240px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+    z-index: 1000;
+    padding: 8px 0;
+  }
+
+  .bmac-dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-size: 0.98rem;
+    transition: all 0.2s ease;
+  }
+
+  .bmac-dropdown a:hover {
+    background: rgba(248, 243, 43, 0.18);
+    color: var(--color-text-main);
+  }
+
+  .bmac-dropdown .amount {
+    font-weight: 800;
+    color: var(--zinc-yellow);
+    font-size: 1.15rem;
+    min-width: 38px;
+  }
+
+  .bmac-dropdown .custom-amount {
+    font-weight: 700;
+    color: var(--zinc-yellow);
+    justify-content: center !important;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 4px;
+    padding-top: 12px;
+  }
+
+  .bmac-dropdown .bitcoin-option {
+    color: #f7931a;
+    font-weight: 700;
+  }
+
+  .bmac-dropdown .bitcoin-option:hover {
+    background: rgba(247, 147, 26, 0.12);
+  }
+
+  /* Keep your existing styles for the rest */
   .navbar-brand-logo { height: 32px; width: auto; transition: transform 0.3s ease; }
   .logo-group:hover .navbar-brand-logo { transform: rotate(15deg); }
   .navbar-brand-text { color: var(--color-text-main); }
-  
+
   .nav-link-custom {
     color: var(--color-text-muted);
     font-weight: 600;
@@ -132,55 +261,13 @@
     padding: 0.5rem 0.8rem;
     transition: all 0.2s ease;
   }
-  .nav-link-custom:hover { color: #000; } /* Dark text on hover for clarity */
-  
-  /* BMAC Button */
-  .bmac-button {
-    background-color: var(--zinc-yellow);
-    color: var(--text-on-yellow);
-    border: none;
-    border-radius: 50px;
-    padding: 8px 16px;
-    font-weight: 700;
+  .nav-link-custom:hover { color: var(--color-text-main); }
+
+  .btn-icon-only {
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 10px rgba(248, 243, 43, 0.3);
-  }
-  .bmac-button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(248, 243, 43, 0.5); }
-  .bmac-button svg { width: 18px; height: 18px; }
-  
-  .bmac-dropdown {
-    position: absolute;
-    top: 115%;
-    right: 0;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    min-width: 100px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  .bmac-dropdown a {
-    text-decoration: none;
-    color: #333;
-    padding: 6px 12px;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: bold;
-    transition: background 0.2s;
-  }
-  .bmac-dropdown a:hover { background-color: var(--zinc-yellow); }
-
-  /* Theme Button */
-  .btn-icon-only {
-    width: 40px; 
-    height: 40px; 
-    display: flex; 
-    align-items: center; 
     justify-content: center;
     border-radius: 50%;
     border: 1px solid var(--glass-border);
